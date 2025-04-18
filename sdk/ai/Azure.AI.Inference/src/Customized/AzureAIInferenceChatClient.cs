@@ -552,4 +552,17 @@ internal sealed partial class AzureAIInferenceChatClient : IChatClient
         WriteIndented = true)]
     [JsonSerializable(typeof(AzureAIChatToolJson))]
     internal sealed partial class ChatClientJsonContext : JsonSerializerContext;
+
+    /// <summary>Used to create the JSON payload for an AzureAI chat tool description.</summary>
+    internal sealed class AzureAIChatToolJson
+    {
+        [JsonPropertyName("type")]
+        public string Type { get; set; } = "object";
+
+        [JsonPropertyName("required")]
+        public List<string> Required { get; set; } = [];
+
+        [JsonPropertyName("properties")]
+        public Dictionary<string, JsonElement> Properties { get; set; } = [];
+    }
 }
