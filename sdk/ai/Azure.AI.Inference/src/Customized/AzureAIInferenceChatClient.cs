@@ -7,7 +7,6 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Text.Json;
@@ -49,15 +48,7 @@ internal sealed partial class AzureAIInferenceChatClient : IChatClient
         }
 
         _chatCompletionsClient = chatCompletionsClient;
-
-        // https://github.com/Azure/azure-sdk-for-net/issues/46278
-        // The endpoint isn't currently exposed, so use reflection to get at it, temporarily. Once packages
-        // implement the abstractions directly rather than providing adapters on top of the public APIs,
-        // the package can provide such implementations separate from what's exposed in the public API.
-        var providerUrl = typeof(ChatCompletionsClient).GetField("_endpoint", BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance)
-            ?.GetValue(chatCompletionsClient) as Uri;
-
-        _metadata = new ChatClientMetadata("az.ai.inference", providerUrl, defaultModelId);
+        _metadata = new ChatClientMetadata("az.ai.inference", chatCompletionsClient.Endpoint, defaultModelId);
     }
 
     /// <inheritdoc />
